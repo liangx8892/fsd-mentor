@@ -1,0 +1,83 @@
+spring:
+  profiles:
+    active: local
+---
+spring:
+  profiles: local
+  application:
+    name: fsd-mentor
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:33060/fsd_mentor?useSSL=true&useUnicode=true&characterEncoding=utf-8
+    username: fsd_mentor_admin
+    password: zaq12wsx
+server:
+  servlet:
+    context-path: /mentor
+  port: 9004
+  
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka
+  instance:
+    prefer-ip-address: true
+    ipAddress: 127.0.0.1
+    instance-id: ${spring.application.name}:${server.port}
+    
+# 服务管理配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"        #暴漏的接口，"*"表示所有web监控接口
+#        exclude:            #不暴漏的接口
+      base-path: /actuator  #监控根路径
+    enabled-by-default: true
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+swagger.enabled: true
+logging:
+  config: classpath:logback-boot_dev.xml
+ 
+---
+spring:
+  profiles: k8s
+  application:
+    name: fsd-mentor
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:33060/fsd_mentor?useSSL=true&useUnicode=true&characterEncoding=utf-8
+    username: fsd_mentor_admin
+    password: zaq12wsx
+          
+server:
+  servlet:
+    context-path: /mentor
+  port: 9004
+  
+eureka:
+  client:
+    service-url:
+      defaultZone: http://fsd-registry:8081/eureka
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+# 服务管理配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"        #暴漏的接口，"*"表示所有web监控接口
+#        exclude:            #不暴漏的接口
+      base-path: /actuator  #监控根路径
+    enabled-by-default: true
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+swagger.enabled: true
+
