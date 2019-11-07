@@ -8,7 +8,7 @@ spring:
     name: fsd-mentor
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:33060/fsd_mentor?useSSL=true&useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://172.17.0.1:33060/fsd_mentor?useSSL=true&useUnicode=true&characterEncoding=utf-8
     username: fsd_mentor_admin
     password: zaq12wsx
 server:
@@ -19,10 +19,10 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8081/eureka
+      defaultZone: http://172.17.0.1:8081/eureka
   instance:
     prefer-ip-address: true
-    ipAddress: 127.0.0.1
+    ipAddress: 172.17.0.1
     instance-id: ${spring.application.name}:${server.port}
     
 # 服务管理配置
