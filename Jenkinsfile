@@ -27,7 +27,7 @@ node {
     }
 
     stage('Build Spring boot web application') {
-		sh 'mvn clean install'
+		sh 'mvn clean install -Pprod'
     }
     
     stage('Build and push docker image') {
