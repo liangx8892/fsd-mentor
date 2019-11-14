@@ -1,34 +1,24 @@
 package com.fsd.sba.entity;
 
-import javax.persistence.*;
-
-
-@Entity
-@Table(name = "TECHNOLOGY")
-public class Technology {
+public class Skill {
 	
-	public Technology() {
+	public Skill() {
 		
 	}
 	
-	public Technology(String name, String description, Double baseFee) {
+	public Skill(String name, String description, Double baseFee) {
 		this.name = name;
 		this.description = description;
 		this.baseFee = baseFee;
 	}
 
-    @Id
-	@Column(name = "ID")
-    @GeneratedValue
+
     private Integer id;
 
-    @Column(name = "NAME")
     private String name;
 
-	@Column(name = "DESCRIPTION")
 	private String description;
 
-	@Column(name = "BASE_FEE")
 	private Double baseFee;
 
 	public Integer getId() {
@@ -65,7 +55,7 @@ public class Technology {
 
 	@Override
 	public String toString() {
-		return "Technology{" +
+		return "Skill{" +
 				"id=" + id +
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +

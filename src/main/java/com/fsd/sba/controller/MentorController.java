@@ -1,11 +1,12 @@
 package com.fsd.sba.controller;
 
-import com.fsd.sba.entity.MentorTechnology;
-import com.fsd.sba.entity.MentorTechnologyId;
-import com.fsd.sba.entity.Technology;
+import com.fsd.sba.entity.Mentor;
+import com.fsd.sba.entity.MentorSkill;
+import com.fsd.sba.entity.Skill;
 import com.fsd.sba.model.HttpResponse;
+import com.fsd.sba.model.MentorFilter;
 import com.fsd.sba.service.MentorService;
-import com.fsd.sba.service.TechnologyService;
+import com.fsd.sba.service.SkillService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,27 +24,27 @@ public class MentorController {
 	private static final Logger logger = LoggerFactory.getLogger(MentorController.class);
 
 	@Autowired
-	private TechnologyService technologyService;
+	private SkillService skillService;
 	@Autowired
 	private MentorService mentorService;
 
 	/**
-	 * Interface to get all technologies, Go through Zuul gateway, and should bypass authentication.
+	 * Interface to get all skills, Go through Zuul gateway, and should bypass authentication.
 	 * @param
 	 * @return
 	 */
-	@GetMapping(value = "/technologies", produces = "application/json")
-	@ApiOperation(value = "Get all technologies information")
+	@GetMapping(value = "/skills", produces = "application/json")
+	@ApiOperation(value = "Get all skills information")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok"),
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 401, message = "No Authroization"),
 			@ApiResponse(code = 404, message = "Not Found"),
 			@ApiResponse(code = 500, message = "Internal Error") })
-	public ResponseEntity<HttpResponse<List<Technology>>> getTechnologies() {
+	public ResponseEntity<HttpResponse<List<Skill>>> getSkills() {
 		try {
-			logger.debug("entering getTechnologies of Mentor service.");
-			HttpResponse<List<Technology>> response =
-						new HttpResponse(HttpStatus.OK.value(), technologyService.getTechnologies());
+			logger.debug("entering getSkills of Mentor service.");
+			HttpResponse<List<Skill>> response =
+						new HttpResponse(HttpStatus.OK.value(), skillService.getSkills());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception ex) {
 			HttpResponse response = new HttpResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
@@ -52,23 +53,23 @@ public class MentorController {
 	}
 
 	/**
-	 * Interface for mentor to add specific technology, Go through Zuul gateway, should be authenticated.
-	 * @param mentorTech
+	 * Interface for mentor to add specific skill, Go through Zuul gateway, should be authenticated.
+	 * @param mentorSkill
 	 * @return
 	 */
-	@PostMapping(value = "/addMentorTechnology", produces = "application/json")
-	@ApiOperation(value = "Mentor adds specific technology")
+	@PostMapping(value = "/addMentorSkill", produces = "application/json")
+	@ApiOperation(value = "Mentor adds specific skill")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok"),
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 401, message = "No Authroization"),
 			@ApiResponse(code = 404, message = "Not Found"),
 			@ApiResponse(code = 500, message = "Internal Error") })
-	public ResponseEntity<HttpResponse> addMentorTechnology(
-				@ApiParam(name = "body", required = true) @RequestBody MentorTechnology mentorTech
+	public ResponseEntity<HttpResponse> addMentorSkill(
+				@ApiParam(name = "body", required = true) @RequestBody MentorSkill mentorSkill
 	) {
 		try {
-			logger.debug("entering addMentorTechnology of Mentor service. param mentorTech is {}", mentorTech);
-			mentorService.addMentorTechnology(mentorTech);
+			logger.debug("entering addMentorSkill of Mentor service. param mentorSkill is {}", mentorSkill);
+			mentorService.addMentorSkill(mentorSkill);
 			HttpResponse response = new HttpResponse(HttpStatus.OK.value());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception ex) {
@@ -78,23 +79,23 @@ public class MentorController {
 	}
 
 	/**
-	 * Interface for mentor to delete specific technology, Go through Zuul gateway, should be authenticated.
-	 * @param mentorTechId
+	 * Interface for mentor to delete specific skill, Go through Zuul gateway, should be authenticated.
+	 * @param mentorSkill
 	 * @return
 	 */
-	@DeleteMapping(value = "/deleteMentorTechnology", produces = "application/json")
-	@ApiOperation(value = "Mentor adds specific technology")
+	@DeleteMapping(value = "/deleteMentorSkill", produces = "application/json")
+	@ApiOperation(value = "Mentor delete specific skill")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok"),
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 401, message = "No Authroization"),
 			@ApiResponse(code = 404, message = "Not Found"),
 			@ApiResponse(code = 500, message = "Internal Error") })
-	public ResponseEntity<HttpResponse> deleteMentorTechnology(
-			@ApiParam(name = "body", required = true) @RequestBody MentorTechnologyId mentorTechId
+	public ResponseEntity<HttpResponse> deleteMentorSkill(
+			@ApiParam(name = "body", required = true) @RequestBody MentorSkill mentorSkill
 	) {
 		try {
-			logger.debug("entering deleteMentorTechnology of Mentor service. param mentorTechId is {}", mentorTechId);
-			mentorService.deleteMentorTechnology(mentorTechId);
+			logger.debug("entering deleteMentorSkill of Mentor service. param mentorSkill is {}", mentorSkill);
+			mentorService.deleteMentorSkill(mentorSkill);
 			HttpResponse response = new HttpResponse(HttpStatus.OK.value());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception ex) {
@@ -104,23 +105,23 @@ public class MentorController {
 	}
 
 	/**
-	 * Interface for mentor to delete all their own technologies, Go through Zuul gateway, should be authenticated.
-	 * @param userId
+	 * Interface for mentor to delete all their own skills, Go through Zuul gateway, should be authenticated.
+	 * @param mentorId
 	 * @return
 	 */
-	@DeleteMapping(value = "/deleteMentorTechnologies", produces = "application/json")
-	@ApiOperation(value = "Mentor adds specific technology")
+	@DeleteMapping(value = "/clearMentorSkills", produces = "application/json")
+	@ApiOperation(value = "Mentor deletes multiple skills")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok"),
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 401, message = "No Authroization"),
 			@ApiResponse(code = 404, message = "Not Found"),
 			@ApiResponse(code = 500, message = "Internal Error") })
-	public ResponseEntity<HttpResponse> deleteMentorTechnologies(
-			@RequestParam(value = "userId", required = true) String userId
+	public ResponseEntity<HttpResponse> clearMentorSkills(
+			@RequestParam(value = "mentorId", required = true) Long mentorId
 	) {
 		try {
-			logger.debug("entering deleteMentorTechnologies of Mentor service. param userId is {}", userId);
-			mentorService.deleteMentorTechnologies(Long.valueOf(userId));
+			logger.debug("entering clearMentorSkills of Mentor service. param mentorId is {}", mentorId);
+			mentorService.clearMentorSkills(mentorId);
 			HttpResponse response = new HttpResponse(HttpStatus.OK.value());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception ex) {
@@ -130,23 +131,48 @@ public class MentorController {
 	}
 
 	/**
-	 * Internal interface for getting specific mentor's technologies, and should bypass authentication.
-	 * @param
+	 * Internal interface for getting specific mentor's skills, and should bypass authentication.
+	 * @param mentorId
 	 * @return
 	 */
-	@GetMapping(value = "/getMentorTechnologies", produces = "application/json")
-	@ApiOperation(value = "Get all technologies information")
+	@GetMapping(value = "/getMentorSkills", produces = "application/json")
+	@ApiOperation(value = "Get all skills for specific mentor")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok"),
 			@ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 401, message = "No Authroization"),
 			@ApiResponse(code = 404, message = "Not Found"),
 			@ApiResponse(code = 500, message = "Internal Error") })
-	public ResponseEntity<HttpResponse<List<Technology>>> getTechnologies(
-			@RequestParam(value = "userId", required = true) String userId) {
+	public ResponseEntity<HttpResponse<List<MentorSkill>>> getMentorSkills(
+			@RequestParam(value = "mentorId", required = true) Long mentorId) {
 		try {
-			logger.debug("entering getMentorTechnologies of Mentor service.");
-			HttpResponse<List<Technology>> response =
-					new HttpResponse(HttpStatus.OK.value(), technologyService.getTechnologies());
+			logger.debug("entering getMentorSkills of Mentor service. param mentorId is {}", mentorId);
+			HttpResponse<List<MentorSkill>> response =
+					new HttpResponse(HttpStatus.OK.value(), mentorService.getMentorSkills(mentorId));
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception ex) {
+			HttpResponse response = new HttpResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Internal interface for getting specific mentor's skills, and should bypass authentication.
+	 * @param filter
+	 * @return
+	 */
+	@GetMapping(value = "/getMentorsByFilter", produces = "application/json")
+	@ApiOperation(value = "Get all skills for specific mentor")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "ok"),
+			@ApiResponse(code = 400, message = "Bad Request"),
+			@ApiResponse(code = 401, message = "No Authroization"),
+			@ApiResponse(code = 404, message = "Not Found"),
+			@ApiResponse(code = 500, message = "Internal Error") })
+	public ResponseEntity<HttpResponse<List<Mentor>>> getMentorsByFilter(
+			@ApiParam(name = "body", required = true) @RequestBody MentorFilter filter) {
+		try {
+			logger.debug("entering getMentorsByFilter of Mentor service. param filter is {}", filter);
+			HttpResponse<List<Mentor>> response =
+					new HttpResponse(HttpStatus.OK.value(), mentorService.getMentorsBySkillAndTimeSlot(filter));
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception ex) {
 			HttpResponse response = new HttpResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
